@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f0e13">
+<title>Cinebox</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Concept : salle de projection. Fond encre, titres condensés d'affiche, ambre de lanterne. */
+:root{
+  --ink:#0f0e13;
+  --panel:#1a1922;
+  --panel-2:#23212c;
+  --line:#2f2c3a;
+  --text:#efebe4;
+  --mute:#9b97a6;
+  --amber:#f2b134;
+  --amber-ink:#2a1d00;
+  --danger:#ff7a6b;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --gutter:max(16px,env(safe-area-inset-left,0px));
+  --gutter-r:max(16px,env(safe-area-inset-right,0px));
+  --tabs-h:60px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--ink);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.45}
+body{padding-bottom:calc(var(--tabs-h) + env(safe-area-inset-bottom,0px) + 12px)}
+button{font:inherit;color:inherit;cursor:pointer}
+img{display:block;max-width:100%}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
+  padding:calc(10px + env(safe-area-inset-top,0px)) var(--gutter-r) 10px var(--gutter);
+  background:linear-gradient(var(--ink) 70%,transparent)}
+.logo{font-family:var(--display);font-weight:800;font-size:28px;letter-spacing:.04em;line-height:1}
+.logo span{color:var(--amber)}
+.tag{font-size:12px;color:var(--mute);letter-spacing:.08em;text-transform:uppercase}
+
+main{min-height:60vh}
+.pad{padding-left:var(--gutter);padding-right:var(--gutter-r)}
+
+/* Hero */
+.hero{position:relative;margin:4px var(--gutter-r) 8px var(--gutter);border-radius:14px;overflow:hidden;
+  min-height:300px;background:var(--panel);display:flex;align-items:flex-end}
+.hero .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.9)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(15,14,19,.96) 8%,rgba(15,14,19,.35) 60%,rgba(15,14,19,.1))}
+.hero .in{position:relative;z-index:1;padding:18px;display:grid;gap:10px;width:100%}
+.hero .kicker{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);font-weight:600}
+.hero h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(34px,9vw,56px);line-height:.95;text-wrap:balance}
+.hero p{margin:0;color:#d4d0da;font-size:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.row-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:10px;
+  border:1px solid var(--line);background:var(--panel-2);font-weight:600}
+.btn.primary{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}
+.btn.ghost{background:transparent}
+.btn[aria-pressed="true"]{border-color:var(--amber);color:var(--amber)}
+
+/* Rails */
+.rail{margin:22px 0 0}
+.rail h2{margin:0 var(--gutter-r) 10px var(--gutter);font-family:var(--display);font-weight:700;font-size:24px;letter-spacing:.03em}
+.strip{display:flex;gap:12px;overflow-x:auto;padding:2px var(--gutter-r) 8px var(--gutter);scroll-snap-type:x proximity;scroll-padding:0 var(--gutter-r) 0 var(--gutter);scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:14px 12px;padding:0 var(--gutter-r) 0 var(--gutter)}
+
+.card{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-start;flex:0 0 132px;scroll-snap-align:start}
+.grid .card{flex:initial}
+.card .poster{position:relative;aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:var(--panel-2);border:1px solid var(--line)}
+.card .poster img{width:100%;height:100%;object-fit:cover}
+.card .poster .ph{position:absolute;inset:0;display:grid;place-items:center;padding:8px;text-align:center;font-family:var(--display);font-size:20px;font-weight:700;color:var(--mute)}
+.card .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(0,0,0,.55)}
+.card .bar i{display:block;height:100%;background:var(--amber)}
+.card .t{margin-top:7px;font-size:14px;font-weight:600;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .y{font-size:12px;color:var(--mute)}
+.card:focus-visible .poster{outline:2px solid var(--amber)}
+
+.sk .poster{animation:pulse 1.3s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45}}
+
+/* Search */
+.search{padding:6px var(--gutter-r) 14px var(--gutter)}
+.search input{width:100%;min-height:48px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text);padding:0 16px;font:inherit;font-size:16px}
+.search input::placeholder{color:var(--mute)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 0;scrollbar-width:none}
+.chip{flex:0 0 auto;min-height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:transparent;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:var(--amber-ink);font-weight:600}
+.note{padding:18px var(--gutter-r) 18px var(--gutter);color:var(--mute)}
+.note.err{color:var(--danger)}
+.empty{padding:40px var(--gutter-r) 40px var(--gutter);text-align:center;color:var(--mute)}
+.empty b{display:block;font-family:var(--display);font-size:26px;color:var(--text);margin-bottom:4px}
+.page-title{margin:8px var(--gutter-r) 12px var(--gutter);font-family:var(--display);font-weight:800;font-size:34px}
+
+/* Tabs */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(3,1fr);
+  padding:0 var(--gutter-r) env(safe-area-inset-bottom,0px) var(--gutter);background:rgba(15,14,19,.96);border-top:1px solid var(--line);backdrop-filter:blur(10px)}
+.tabs button{all:unset;box-sizing:border-box;cursor:pointer;height:var(--tabs-h);display:grid;place-items:center;align-content:center;gap:2px;font-size:12px;color:var(--mute);font-weight:600}
+.tabs button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabs button[aria-current="page"]{color:var(--amber)}
+.tabs button:focus-visible{outline:2px solid var(--amber);outline-offset:-4px}
+
+/* Detail sheet */
+.sheet{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center}
+.sheet[hidden]{display:none}
+.panel{width:100%;max-width:640px;max-height:92%;overflow:auto;background:var(--panel);border-radius:18px 18px 0 0;
+  padding:18px var(--gutter-r) calc(22px + env(safe-area-inset-bottom,0px)) var(--gutter);border:1px solid var(--line);border-bottom:0}
+.panel .head{display:flex;gap:14px}
+.panel .head .poster{flex:0 0 104px;aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:var(--panel-2)}
+.panel .head .poster img{width:100%;height:100%;object-fit:cover}
+.panel h3{margin:0;font-family:var(--display);font-weight:800;font-size:30px;line-height:1;text-wrap:balance}
+.meta{margin:6px 0 0;color:var(--mute);font-size:14px}
+.panel .desc{margin:14px 0 0;color:#d4d0da;font-size:15px;white-space:pre-line;overflow-wrap:anywhere}
+.panel .desc.clamp{display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.more{background:none;border:0;color:var(--amber);padding:6px 0;font-size:14px;font-weight:600}
+.panel .row-actions{margin-top:16px}
+.close{position:absolute;right:max(10px,env(safe-area-inset-right,0px));top:calc(10px + env(safe-area-inset-top,0px))}
+.src{margin-top:14px;font-size:12px;color:var(--mute)}
+.src a{color:var(--mute)}
+
+/* Player */
+.player{position:fixed;inset:0;z-index:60;background:#000;display:flex;flex-direction:column}
+.player[hidden]{display:none}
+.pbar{display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top,0px)) var(--gutter-r) 8px var(--gutter);background:#000}
+.pbar .name{flex:1;min-width:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player video{flex:1;min-height:0;width:100%;background:#000}
+.perr{padding:16px var(--gutter-r) calc(16px + env(safe-area-inset-bottom,0px)) var(--gutter);color:var(--danger);background:#000}
+.perr a{color:var(--amber)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tabs-h) + env(safe-area-inset-bottom,0px) + 16px);z-index:80;background:var(--panel-2);border:1px solid var(--line);padding:10px 16px;border-radius:10px;font-size:14px}
+.toast[hidden]{display:none}
+@media (prefers-reduced-motion:reduce){.sk .poster{animation:none}}
+@media (min-width:700px){.card{flex-basis:160px}.grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="logo">CINE<span>BOX</span></div>
+  <div class="tag">Films en français</div>
+</header>
+<main id="view" aria-live="polite"></main>
+
+<nav class="tabs" aria-label="Navigation">
+  <button data-tab="home" aria-current="page"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Accueil</button>
+  <button data-tab="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Recherche</button>
+  <button data-tab="list"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>Ma liste</button>
+</nav>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-label="Détails du film"></div>
+<div class="player" id="player" hidden></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+"use strict";
+const IA = "https://archive.org";
+const CATS = [
+  {id: "feature_films", label: "Longs métrages"},
+  {id: "SciFi_Horror", label: "Science-fiction et horreur"},
+  {id: "film_noir", label: "Films noirs"},
+  {id: "silent_films", label: "Films muets"},
+  {id: "animationandcartoons", label: "Animation"},
+  {id: "classic_tv", label: "Séries classiques"}
+];
+const ALL_COLL = CATS.map(c => c.id).join(" OR ");
+/* Uniquement des films en français */
+const LANG = "language:(French OR fre OR fra OR fr OR français)";
+const BASE = `mediatype:(movies) AND collection:(${ALL_COLL}) AND ${LANG}`;
+const RAILS = [
+  {label: "Les plus regardés", q: BASE, sort: "downloads desc"},
+  {label: "Ajoutés récemment", q: BASE, sort: "addeddate desc"},
+  ...CATS.map(c => ({label: c.label, q: `collection:(${c.id}) AND mediatype:(movies) AND ${LANG}`, sort: "downloads desc"}))
+];
+
+/* ---------- utilitaires ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+function h(tag, attrs = {}, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v === false || v == null) continue;
+    if (k === "class") e.className = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? "" : v);
+  }
+  for (const k of kids.flat()) {
+    if (k == null || k === false) continue;
+    e.append(k.nodeType ? k : document.createTextNode(String(k)));
+  }
+  return e;
+}
+const store = {
+  get(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* stockage indisponible */ } }
+};
+const first = v => Array.isArray(v) ? v[0] : v;
+function clean(d) {
+  if (!d) return "";
+  if (Array.isArray(d)) d = d.join("\n");
+  const html = String(d).replace(/<br\s*\/?>/gi, "\n").replace(/<\/p>/gi, "\n");
+  return (new DOMParser().parseFromString(html, "text/html").body.textContent || "").replace(/\n{3,}/g, "\n\n").trim();
+}
+const thumb = id => `${IA}/services/img/${encodeURIComponent(id)}`;
+const norm = d => ({
+  identifier: d.identifier,
+  title: clean(first(d.title)) || d.identifier,
+  year: first(d.year) ? String(first(d.year)).slice(0, 4) : "",
+  creator: clean(first(d.creator)),
+  description: clean(d.description),
+  runtime: first(d.runtime) || ""
+});
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 2400);
+}
+const fmtTime = s => { s = Math.floor(s); const m = Math.floor(s / 60); return m >= 60 ? `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, "0")}` : `${m} min`; };
+
+/* ---------- données Internet Archive ---------- */
+async function search(q, rows = 24, page = 1, sort = "downloads desc") {
+  const p = new URLSearchParams();
+  p.set("q", q);
+  ["identifier", "title", "year", "description", "creator", "runtime"].forEach(f => p.append("fl[]", f));
+  p.append("sort[]", sort);
+  p.set("rows", rows); p.set("page", page); p.set("output", "json");
+  const r = await fetch(`${IA}/advancedsearch.php?${p}`);
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  const j = await r.json();
+  return (j.response.docs || []).map(norm);
+}
+async function metadata(id) {
+  const r = await fetch(`${IA}/metadata/${encodeURIComponent(id)}`);
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  return r.json();
+}
+function pickVideo(files) {
+  const ok = (files || []).filter(f => !/trailer|sample/i.test(f.name));
+  const by = fn => ok.find(fn);
+  return by(f => f.format === "h.264" && /\.mp4$/i.test(f.name))
+      || by(f => f.format === "MPEG4")
+      || by(f => /\.mp4$/i.test(f.name))
+      || by(f => /\.(webm|ogv)$/i.test(f.name));
+}
+const videoUrl = (id, name) => `${IA}/download/${encodeURIComponent(id)}/${name.split("/").map(encodeURIComponent).join("/")}`;
+
+/* ---------- état local ---------- */
+const favs = () => store.get("cl.list", {});
+const prog = () => store.get("cl.prog", {});
+function toggleFav(doc) {
+  const f = favs();
+  if (f[doc.identifier]) { delete f[doc.identifier]; toast("Retiré de Ma liste"); }
+  else { f[doc.identifier] = {identifier: doc.identifier, title: doc.title, year: doc.year, ts: Date.now()}; toast("Ajouté à Ma liste"); }
+  store.set("cl.list", f);
+  return !!f[doc.identifier];
+}
+function saveProg(doc, t, d) {
+  if (!d || !isFinite(d)) return;
+  const p = prog();
+  if (t / d > 0.96) delete p[doc.identifier];
+  else p[doc.identifier] = {identifier: doc.identifier, title: doc.title, year: doc.year, t, d, ts: Date.now()};
+  store.set("cl.prog", p);
+}
+
+/* ---------- composants ---------- */
+function card(doc, opts = {}) {
+  const p = prog()[doc.identifier];
+  const img = h("img", {src: thumb(doc.identifier), alt: "", loading: "lazy", decoding: "async"});
+  const ph = h("div", {class: "ph"}, doc.title);
+  img.addEventListener("load", () => ph.remove());
+  img.addEventListener("error", () => img.remove());
+  const poster = h("div", {class: "poster"}, ph, img);
+  if (opts.progress && p) poster.append(h("div", {class: "bar"}, h("i", {style: `width:${Math.round(p.t / p.d * 100)}%`})));
+  return h("button", {class: "card", type: "button", onclick: () => openSheet(doc)},
+    poster, h("div", {class: "t"}, doc.title), h("div", {class: "y"}, doc.year));
+}
+function skeleton(n = 6) {
+  return Array.from({length: n}, () => h("div", {class: "card sk", "aria-hidden": "true"}, h("div", {class: "poster"}), h("div", {class: "t"}, " ")));
+}
+function rail(title, docs, opts) {
+  return h("section", {class: "rail"}, h("h2", {}, title), h("div", {class: "strip"}, docs.map(d => card(d, opts))));
+}
+function errBox(retry) {
+  return h("div", {class: "note err"}, "Impossible de joindre Internet Archive. Vérifie ta connexion. ",
+    h("button", {class: "more", type: "button", onclick: retry}, "Réessayer"));
+}
+
+/* ---------- vues ---------- */
+const view = $("#view");
+let tab = "home", token = 0;
+
+function setTab(t) {
+  tab = t; token++;
+  document.querySelectorAll(".tabs button").forEach(b => b.toggleAttribute("aria-current", b.dataset.tab === t));
+  document.querySelectorAll(".tabs button").forEach(b => { if (b.dataset.tab === t) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+  window.scrollTo(0, 0);
+  ({home: renderHome, search: renderSearch, list: renderList})[t]();
+}
+
+async function renderHome() {
+  const my = token;
+  view.replaceChildren();
+  const heroSlot = h("div");
+  const local = h("div");
+  const rails = h("div");
+  view.append(heroSlot, local, rails);
+
+  const cont = Object.values(prog()).sort((a, b) => b.ts - a.ts);
+  if (cont.length) local.append(rail("Reprendre", cont, {progress: true}));
+  const mine = Object.values(favs()).sort((a, b) => b.ts - a.ts);
+  if (mine.length) local.append(rail("Ma liste", mine));
+
+  RAILS.forEach((c, i) => {
+    const strip = h("div", {class: "strip"}, skeleton());
+    const sec = h("section", {class: "rail"}, h("h2", {}, c.label), strip);
+    rails.append(sec);
+    search(c.q, 24, 1, c.sort).then(docs => {
+      if (my !== token) return;
+      if (!docs.length) { sec.remove(); return; }
+      strip.replaceChildren(...docs.map(d => card(d)));
+      if (i === 0) heroSlot.replaceChildren(hero(docs[Math.floor(Math.random() * Math.min(docs.length, 8))]));
+    }).catch(() => { if (my === token) strip.replaceChildren(errBox(() => renderHome())); });
+  });
+}
+
+function hero(doc) {
+  return h("section", {class: "hero"},
+    h("img", {class: "bg", src: thumb(doc.identifier), alt: ""}),
+    h("div", {class: "in"},
+      h("div", {class: "kicker"}, "À l'affiche ce soir"),
+      h("h1", {}, doc.title),
+      doc.description ? h("p", {}, doc.description) : null,
+      h("div", {class: "row-actions"},
+        h("button", {class: "btn primary", type: "button", onclick: () => openSheet(doc, true)}, "▶ Regarder"),
+        h("button", {class: "btn", type: "button", onclick: () => openSheet(doc)}, "Détails"))));
+}
+
+function renderSearch() {
+  const my = token;
+  let cat = "";
+  const input = h("input", {id: "q", type: "search", placeholder: "Titre d'un film ou d'une série", autocomplete: "off", enterkeyhint: "search"});
+  const out = h("div");
+  const chips = h("div", {class: "chips"},
+    [{id: "", label: "Tout"}, ...CATS].map(c => h("button", {class: "chip", type: "button", "aria-pressed": String(c.id === cat), onclick: e => {
+      cat = c.id;
+      chips.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", "false"));
+      e.currentTarget.setAttribute("aria-pressed", "true");
+      run();
+    }}, c.label)));
+  view.replaceChildren(h("div", {class: "search"}, input, chips), out);
+
+  let timer;
+  input.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(run, 420); });
+  input.addEventListener("keydown", e => { if (e.key === "Enter") { clearTimeout(timer); run(); } });
+
+  async function run() {
+    const raw = input.value.replace(/["():\[\]{}\\\/^~*?!+\-]/g, " ").trim();
+    const coll = cat || ALL_COLL;
+    if (!raw && !cat) { out.replaceChildren(h("div", {class: "empty"}, h("b", {}, "Que veux-tu voir ?"), "Cherche un titre ou choisis une catégorie.")); return; }
+    out.replaceChildren(h("div", {class: "grid"}, skeleton(9)));
+    const q = (raw ? `title:(${raw}) AND ` : "") + `mediatype:(movies) AND collection:(${coll}) AND ${LANG}`;
+    try {
+      const docs = await search(q, 36);
+      if (my !== token) return;
+      out.replaceChildren(docs.length
+        ? h("div", {class: "grid"}, docs.map(d => card(d)))
+        : h("div", {class: "empty"}, h("b", {}, "Aucun résultat"), "Essaie un autre titre ou une autre catégorie."));
+    } catch { if (my === token) out.replaceChildren(errBox(run)); }
+  }
+  run();
+}
+
+function renderList() {
+  const mine = Object.values(favs()).sort((a, b) => b.ts - a.ts);
+  view.replaceChildren(h("h1", {class: "page-title"}, "Ma liste"),
+    mine.length ? h("div", {class: "grid"}, mine.map(d => card(d)))
+      : h("div", {class: "empty"}, h("b", {}, "Rien ici pour l'instant"), "Ouvre un film et touche « Ma liste » pour le retrouver plus tard."));
+}
+
+/* ---------- fiche film ---------- */
+const sheet = $("#sheet");
+let sheetDoc = null;
+async function openSheet(doc, autoplay = false) {
+  sheetDoc = doc;
+  const has = !!favs()[doc.identifier];
+  const desc = h("p", {class: "desc clamp"}, doc.description || "");
+  const more = h("button", {class: "more", type: "button", hidden: true, onclick: () => { desc.classList.toggle("clamp"); more.textContent = desc.classList.contains("clamp") ? "Lire la suite" : "Réduire"; }}, "Lire la suite");
+  const meta = h("p", {class: "meta"}, [doc.year, doc.creator].filter(Boolean).join(" · "));
+  const playBtn = h("button", {class: "btn primary", type: "button", disabled: true}, "Chargement…");
+  const favBtn = h("button", {class: "btn", type: "button", "aria-pressed": String(has), onclick: () => favBtn.setAttribute("aria-pressed", String(toggleFav(doc)))}, "＋ Ma liste");
+  const note = h("div");
+  const pr = prog()[doc.identifier];
+
+  const panel = h("div", {class: "panel"},
+    h("div", {class: "head"},
+      h("div", {class: "poster"}, h("img", {src: thumb(doc.identifier), alt: "", onerror: e => e.target.remove()})),
+      h("div", {style: "min-width:0"}, h("h3", {}, doc.title), meta,
+        pr ? h("p", {class: "meta"}, `Vu à ${Math.round(pr.t / pr.d * 100)} %`) : null)),
+    desc, more,
+    h("div", {class: "row-actions"}, playBtn, favBtn, h("button", {class: "btn ghost", type: "button", onclick: closeSheet}, "Fermer")),
+    note,
+    h("p", {class: "src"}, "Film en français, du domaine public ou en diffusion libre."));
+  sheet.replaceChildren(panel);
+  sheet.hidden = false;
+  document.body.style.overflow = "hidden";
+  playBtn.focus();
+  const fit = () => { if (desc.scrollHeight > desc.clientHeight + 2) more.hidden = false; };
+
+  try {
+    const m = await metadata(doc.identifier);
+    if (sheetDoc !== doc) return;
+    const md = m.metadata || {};
+    if (!doc.description) { doc.description = clean(md.description); desc.textContent = doc.description; }
+    if (!doc.creator) { doc.creator = clean(first(md.creator)); }
+    if (!doc.year) { doc.year = String(first(md.year) || first(md.date) || "").slice(0, 4); }
+    meta.textContent = [doc.year, doc.creator, md.runtime ? clean(first(md.runtime)) : ""].filter(Boolean).join(" · ");
+    requestAnimationFrame(fit);
+    const file = pickVideo(m.files);
+    if (!file) { playBtn.textContent = "Lecture indisponible"; note.append(h("div", {class: "note"}, "Aucune vidéo lisible pour ce titre. Essaie un autre film.")); return; }
+    playBtn.disabled = false;
+    playBtn.textContent = pr ? "▶ Reprendre" : "▶ Regarder";
+    playBtn.onclick = () => startPlayer(doc, file);
+    if (autoplay) playBtn.click();
+  } catch {
+    playBtn.textContent = "Réessayer";
+    playBtn.disabled = false;
+    playBtn.onclick = () => openSheet(doc, autoplay);
+    note.append(h("div", {class: "note err"}, "Impossible de charger les détails."));
+  }
+  requestAnimationFrame(fit);
+}
+function closeSheet() { sheet.hidden = true; sheetDoc = null; document.body.style.overflow = ""; if (tab === "home") renderHome(); else if (tab === "list") renderList(); }
+sheet.addEventListener("click", e => { if (e.target === sheet) closeSheet(); });
+
+/* ---------- lecteur ---------- */
+const playerEl = $("#player");
+function startPlayer(doc, file) {
+  const video = h("video", {controls: true, playsinline: true, preload: "metadata", src: videoUrl(doc.identifier, file.name)});
+  const err = h("div", {class: "perr", hidden: true});
+  const bar = h("div", {class: "pbar"},
+    h("button", {class: "btn", type: "button", onclick: stop, "aria-label": "Fermer le lecteur"}, "✕ Fermer"),
+    h("div", {class: "name"}, doc.title),
+    h("button", {class: "btn ghost", type: "button", onclick: () => { const v = video; (v.requestFullscreen || v.webkitEnterFullscreen || (() => {})).call(v); }}, "Plein écran"));
+  playerEl.replaceChildren(bar, video, err);
+  playerEl.hidden = false;
+
+  const saved = prog()[doc.identifier];
+  let last = 0;
+  video.addEventListener("loadedmetadata", () => { if (saved && saved.t > 10 && saved.t < video.duration - 30) video.currentTime = saved.t; });
+  video.addEventListener("timeupdate", () => { const n = Date.now(); if (n - last > 4000 && video.currentTime > 5) { last = n; saveProg(doc, video.currentTime, video.duration); } });
+  video.addEventListener("pause", () => saveProg(doc, video.currentTime, video.duration));
+  video.addEventListener("ended", () => saveProg(doc, video.duration, video.duration));
+  video.addEventListener("error", () => {
+    err.hidden = false;
+    err.replaceChildren("Lecture impossible pour ce film. ",
+      h("button", {class: "more", type: "button", onclick: () => { err.hidden = true; video.load(); video.play().catch(() => {}); }}, "Réessayer"));
+  });
+  function stop() {
+    saveProg(doc, video.currentTime, video.duration);
+    video.pause(); video.removeAttribute("src"); video.load();
+    playerEl.hidden = true; playerEl.replaceChildren();
+    if (sheetDoc === doc) openSheet(doc);
+  }
+  video.play().catch(() => {});
+}
+
+/* ---------- démarrage ---------- */
+document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => { if (!sheet.hidden) { sheet.hidden = true; sheetDoc = null; document.body.style.overflow = ""; } setTab(b.dataset.tab); }));
+document.addEventListener("keydown", e => { if (e.key === "Escape") { if (!playerEl.hidden) playerEl.querySelector(".pbar .btn").click(); else if (!sheet.hidden) closeSheet(); } });
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("sw.js").catch(() => {});
+setTab("home");
+</script>
+</body>
+</html>
